@@ -28,8 +28,35 @@ Python Tuples:
     faster and use less memory than using a list
     immutable -> cannot change value nor add value
     
-Python Dictionaries
+Python Dictionaries:
+    declare by using {key1 : value1, key2 : value2}
+    access value in dictionary using key: dict[key]
+    remove entry in dictionary using key: del dict[key]
+    
+    looping in dictionaries:
+        looping through all key-value pairs: for key, value in dict.items()
+        looping through all keys: for key in dict.key() OR for key in dict (by default)
+    
     
 Flow control in Python:
     and or keyword
     checking whether a value is in a list
+
+Function:
+    def is the keyword to define a function in Python
+    
+    passing argument into function:
+        positional argument: based on the order of the arguments provided
+        keyword argument: name-value pair that we pass to a function
+        default value: def describe_pet(pet_name, pet_type = 'dog'):
+        
+    arbitrary arguments: *args, **kwargs
+    
+Import module:
+    import an entire module: import module_name
+    import specific functions: from module_name import function_name
+    giving a function an alias: from module_name import function_name as alias
+    
+Class and Inheritance in Python:
+    __init()__: special method that is called every time an object is created
+    
