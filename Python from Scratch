@@ -1,0 +1,35 @@
+Python List:
+    declare by using a pair of square brackets
+
+    modify an element
+    adding element to the end of a list: append()
+    insert element to a specified index: insert(index, element): if index is out of bound, simply add it to the end of the list
+    remove element with an index: delete(list[index])
+    pop and return the last used element: pop()
+    pop and return element with specified index: pop(index)
+    remove element by value by value: remove(value)
+    
+    organize a list:
+        sort(): ascending order. sort(reverse = True): sort descending order.
+        sorted(): display the list in a particular order but does not affect the actual order
+        reverse(): simply reverse the order of the list
+        len(): find the length of a list
+        
+    looping through a list:
+        for element_name in list_name:
+        range(start - inclusive, end - exclusive, gap between two elements)
+        list comprehension: [value**2 for value in range (0, 5)]
+        
+    slicing a list: list[:end], list[start:]
+    copying a list: list[:]
+   
+Python Tuples:
+    declare by using a pair of parentheses
+    faster and use less memory than using a list
+    immutable -> cannot change value nor add value
+    
+Python Dictionaries
+    
+Flow control in Python:
+    and or keyword
+    checking whether a value is in a list
