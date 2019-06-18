@@ -47,7 +47,7 @@ When an user is created successfully, a 201 Created response will be sent back, 
 When an user with this username already exists in our database, a 400 Bad Request response will be sent back, alongside with this message:
 ```
 {
-    "message": "A user with that username already exists"
+    "message": "A user with that username already exists."
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
@@ -137,7 +137,7 @@ In case you find your book, congratulations! There is always a 200 OK response w
 Too bad we cannot find your book! However, we find a 404 Not Found response for you:
 ```
 {
-    "message": "Book not found"
+    "message": "Book not found!"
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
@@ -209,13 +209,13 @@ Header:
 In case we can remove the book you hated, congratulations! We return a 200 OK response with this message:
 ```
 {
-    "message": "Book deleted"
+    "message": "Book deleted!"
 }
 ```
 Too bad we cannot find the book you hated, maybe it was removed a long time ago! A 404 Not Found response will be return with this message:
 ```
 {
-    "message": "There is no book with bookID <int:bookID>"
+    "message": "There is no book with bookID <int:bookID>."
 }
 ```
 Did you forgot to authorize yourself? You bet. Since our books are precious, we cannot allow anyone to go and just delete some random books! A 401 Unauthorized reminder for you!
@@ -335,7 +335,7 @@ In case you find your store, congratulations! There is always a 200 OK response 
 Too bad we cannot find your store! However, we find a 404 Not Found response for you:
 ```
 {
-    "message": "Store not found"
+    "message": "Store not found!"
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
@@ -406,7 +406,7 @@ Header:
 In case we can remove the store you hated, congratulations! We return a 200 OK response with this message:
 ```
 {
-    "message": "Store deleted"
+    "message": "Store deleted."
 }
 ```
 Too bad we cannot find the store you hated, maybe it was removed a long time ago! A 404 Not Found response will be return with this message:
