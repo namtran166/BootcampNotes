@@ -137,7 +137,7 @@ In case you find your book, congratulations! There is always a 200 OK response w
 Too bad we cannot find your book! However, we find a 404 Not Found response for you:
 ```
 {
-    "message": "Item not found"
+    "message": "Book not found"
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
@@ -148,7 +148,7 @@ When there is some unexpected error within our internal server, a 500 Internal S
 ```
 
 ## POST /books/bookID
-With this endpoint we can easily upload our favorite book we currently have in our database! Just a quick reminder, don't forget to put the bookID!
+With this endpoint we can easily upload our favorite book we currently have to our database! Just a quick reminder, don't forget to put the bookID!
 ```
 Header:
     Content-Type: application/json
@@ -294,4 +294,207 @@ When there is some unexpected error within our internal server, a 500 Internal S
 ```
 {
     "message": "An error occurred when trying to put this book."
+}
+```
+
+## GET /stores
+We have some books, now we need to put them in some stores for others to read! This endpoint helps us acknowledge what stores we currently have! Just a quick reminder, don't forget to put some stores in the database first!
+```
+No request body needed!
+```
+Whatever the request is, there is always a 200 OK response with our stores (none or many):
+```
+{
+    "stores": [
+        {
+            "storeID": <int:storeID>,
+            "name": <string:name>,
+            "books": [
+                book1_info,...
+            ]
+        }
+    ]
+}
+```
+
+## GET /stores/storeID
+With this endpoint we can easily access to a particular store we currently have in our database, and all the books in this store as well! Just a quick reminder, don't forget to put the storeID!
+```
+No request body needed!
+```
+In case you find your store, congratulations! There is always a 200 OK response with your store as well:
+```
+{
+    "storeID": <int:storeID>,
+    "name": <string:name>,
+    "books": [
+        book1_info,...
+    ]
+}
+```
+Too bad we cannot find your store! However, we find a 404 Not Found response for you:
+```
+{
+    "message": "Store not found"
+}
+```
+When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
+```
+{
+    "message": "An error occurred when trying to get this store."
+}
+```
+
+## POST /stores/storeID
+With this endpoint we can easily upload our favorite store we currently have to our database! Just a quick reminder, don't forget to put the storeID!
+```
+Header:
+    Content-Type: application/json
+    Authorization: JWT <string:jwt_token>
+
+Body:
+{
+    "storeID": <int:storeID>,
+    "name': <string:name>,
+}
+```
+In case we can upload your store, congratulations! We return a 201 Created response with your store as well:
+```
+{
+    "storeID": <int:storeID>,
+    "name": <string:name>,
+    "books": [
+        book1_info,...
+    ]
+}
+```
+Too bad we cannot upload your store since someone already registered for this storeID! A 400 Bad Request response will be return with this message:
+```
+{
+    "message": "A store with storeID <int:storeID> already exists."
+}
+```
+Did you forgot to authorize yourself? You bet. Since our stores are important, we cannot allow anyone to go and just upload some random stores! A 401 Unauthorized reminder for you!
+```
+{
+    "description": "Request does not contain an access token",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+Did you log in a long time ago? You should log in again since our protected system invalidate unused access token after some time! A 401 Unauthorized reminder for you!
+```
+{
+    "description": "Signature has expired",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
+```
+{
+    "message": "An error occurred when trying to post this store."
+}
+```
+
+## DELETE /stores/storeID
+With this endpoint we can easily remove our unwanted store we currently have in our database! Just a quick reminder, remove all the books in the store before deleting the store!
+```
+Header:
+    Authorization: JWT <string:jwt_token>
+```
+In case we can remove the store you hated, congratulations! We return a 200 OK response with this message:
+```
+{
+    "message": "Store deleted"
+}
+```
+Too bad we cannot find the store you hated, maybe it was removed a long time ago! A 404 Not Found response will be return with this message:
+```
+{
+    "message": "There is no store with storeID <int:bookID>"
+}
+```
+We found the store, but there are some books in this store, so we cannot just remove it! A 400 Bad Request for you to make sure delete all the books in the store before deleting the store!
+```
+{
+    "message": "This store still contains some books."
+}
+```
+Did you forgot to authorize yourself? You bet. Since our stores are important, we cannot allow anyone to go and just delete some random stores! A 401 Unauthorized reminder for you!
+```
+{
+    "description": "Request does not contain an access token",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+Did you log in a long time ago? You should log in again since our protected system invalidate unused access token after some time! A 401 Unauthorized reminder for you!
+```
+{
+    "description": "Signature has expired",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
+```
+{
+    "message": "An error occurred when trying to delete this store."
+}
+```
+
+## PUT /stores/storeID
+Unsure you put this store to our database or not? Well, you can simply use this PUT method, it will create a new store or update an existing one based on the storeID you provided.
+```
+Header:
+    Content-Type: application/json
+    Authorization: JWT <string:jwt_token>
+
+Body:
+{
+    "storeID": <int:storeID>,
+    "name': <string:name>,
+}
+```
+In case there is no store in our database with this ID, we just created a new one for you! We return a 201 Created response with this store you just created:
+```
+{
+    "storeID": <int:storeID>,
+    "name": <string:name>,
+    "books": [
+        book1_info,...
+    ]
+}
+```
+Yay we found your store in our database! We return a 200 OK response with the updated store:
+```
+{
+    "storeID": <int:storeID>,
+    "name": <string:name>,
+    "books": [
+        book1_info,...
+    ]
+}
+```
+Did you forgot to authorize yourself? You bet. Since our stores are important, we cannot allow anyone to go and just update some random stores! A 401 Unauthorized reminder for you!
+```
+{
+    "description": "Request does not contain an access token",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+Did you log in a long time ago? You should log in again since our protected system invalidate unused access token after some time! A 401 Unauthorized reminder for you!
+```
+{
+    "description": "Signature has expired",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
+```
+{
+    "message": "An error occurred when trying to put this store."
 }
