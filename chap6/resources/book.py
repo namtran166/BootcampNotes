@@ -8,17 +8,17 @@ class Book(Resource):
     parser.add_argument('name',
         type = str,
         required = True,
-        help = "What book is this?"
+        help = 'What book is this?'
     )
     parser.add_argument('author',
         type = str,
         required = True,
-        help = "This book cannot be written by no one!"
+        help = 'This book cannot be written by no one!'
     )
     parser.add_argument('store_id',
         type = int,
         required = True,
-        help = "Every book needs a store to sell!"
+        help = 'Every book needs a store to sell!'
     )
 
     # No need for authentication since GET method is safe
@@ -27,7 +27,7 @@ class Book(Resource):
             book = BookModel.find_by_bookID(bookID)
             if book:
                 return book.json(), 200
-            return {'message': 'Item not found'}, 404
+            return {'message': 'Book not found!'}, 404
         except:
             return {'message': 'An error occurred when trying to get this book.'}, 500
 
@@ -48,7 +48,7 @@ class Book(Resource):
     def delete(self, bookID):
         book = BookModel.find_by_bookID(bookID)
         if book is None:
-            return {'message': "There is no book with bookID '{}'.".format(bookID)}, 400
+            return {'message': "There is no book with bookID '{}'.".format(bookID)}, 404
         else:
             try:
                 book.delete_from_db()
@@ -66,14 +66,15 @@ class Book(Resource):
                 book.name = data['name']
                 book.author = data['author']
                 book.store_id = data['store_id']
+                book.save_to_db()
+                return book.json(), 200
             else:
                 book = BookModel(bookID, **data)
-            book.save_to_db()
+                return book.json(), 201
         except:
             return {'message': 'An error occured while trying to put this book ID'}, 500
-        return book.json(), 200
 
 
 class BookList(Resource):
     def get(self):
-        return {'books': [book.json() for book in BookModel.query.all()]}
+        return {'books': [book.json() for book in BookModel.query.all()]}, 200
