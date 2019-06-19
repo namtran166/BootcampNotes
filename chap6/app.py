@@ -3,9 +3,9 @@ from flask_restful import Api
 from flask_jwt import JWT
 
 from security import authenticate, identity
-from resources.user import UserRegister
 from resources.book import Book, BookList
 from resources.store import Store, StoreList
+from resources.user import UserRegister
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'

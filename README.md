@@ -31,11 +31,11 @@ User authentication is required when using "unsafe" requests, which including PO
 ```
 Header:
     Content-Type: application/json
-    
+
 Body:
 {
-    "username": <string:username>
-    "password": <string:password>
+    "username": <string:username>       #required
+    "password": <string:password>       #required
 }
 ```
 When an user is created successfully, a 201 Created response will be sent back, alongside with this message:
@@ -78,11 +78,11 @@ Once you create an user in our server, you can retrieve the access token anytime
 ```
 Header:
     Content-Type: application/json
-   
+
 Body:   
 {
-    "username": <string:username>
-    "password": <string:password>
+    "username": <string:username>       #required    
+    "password": <string:password>       #required
 }
 ```
 When a registered user with correct password requests successfully, a 200 OK response will be sent back, alongside with the access token:
@@ -97,6 +97,22 @@ When the client enters an unregistered user, or an registered user with incorrec
     "description": "Invalid credentials",
     "error": "Bad Request",
     "status_code": 401
+}
+```
+In case you forgot to put an username, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": {
+        "username": "Username cannot be blank."
+    }
+}
+```
+The same thing happens when you forget to put a password, a 400 Bad Request response will be returned with this message:
+```
+{
+    "message": {
+        "password": "Password cannot be blank."
+    }
 }
 ```
 
@@ -156,10 +172,10 @@ Header:
 
 Body:
 {
-    "bookID": <int:bookID>,
-    "name": <string:name>,
-    "author": <string:author>,
-    "store_id": <int:store_id>
+    "bookID": <int:bookID>,         #required
+    "name": <string:name>,          #required
+    "author": <string:author>,      #required
+    "store_id": <int:store_id>      #required
 }
 ```
 In case we can upload your book, congratulations! We return a 201 Created response with your book as well:
@@ -191,6 +207,24 @@ Did you log in a long time ago? You should log in again since our protected syst
     "description": "Signature has expired",
     "error": "Authorization Required",
     "status_code": 401
+}
+```
+In case you forgot to put a book name, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "What book is this?"
+}
+```
+The same thing happens when you forget to put an author, a 400 Bad Request response will be returned with this message:
+```
+{
+    "message": "This book cannot be written by no one!"
+}
+```
+In case you forgot to put a storeID, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "Every book needs a store to sell!"
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
@@ -250,10 +284,10 @@ Header:
 
 Body:
 {
-    "bookID": <int:bookID>,
-    "name": <string:name>,
-    "author": <string:author>,
-    "store_id": <int:store_id>
+    "bookID": <int:bookID>,         #required
+    "name": <string:name>,          #required   
+    "author": <string:author>,      #required
+    "store_id": <int:store_id>      #required
 }
 ```
 In case there is no book in our database with this ID, we just created a new one for you! We return a 201 Created response with this book you just created:
@@ -288,6 +322,24 @@ Did you log in a long time ago? You should log in again since our protected syst
     "description": "Signature has expired",
     "error": "Authorization Required",
     "status_code": 401
+}
+```
+In case you forgot to put a book name, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "What book is this?"
+}
+```
+The same thing happens when you forget to put an author, a 400 Bad Request response will be returned with this message:
+```
+{
+    "message": "This book cannot be written by no one!"
+}
+```
+In case you forgot to put a storeID, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "Every book needs a store to sell!"
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
@@ -354,8 +406,8 @@ Header:
 
 Body:
 {
-    "storeID": <int:storeID>,
-    "name': <string:name>,
+    "storeID": <int:storeID>,       #required
+    "name': <string:name>,          #required
 }
 ```
 In case we can upload your store, congratulations! We return a 201 Created response with your store as well:
@@ -388,6 +440,12 @@ Did you log in a long time ago? You should log in again since our protected syst
     "description": "Signature has expired",
     "error": "Authorization Required",
     "status_code": 401
+}
+```
+In case you forgot to put a store name, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "What store is this?"
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
@@ -437,6 +495,12 @@ Did you log in a long time ago? You should log in again since our protected syst
     "status_code": 401
 }
 ```
+In case you forgot to put a store name, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "What store is this?"
+}
+```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
 ```
 {
@@ -453,8 +517,8 @@ Header:
 
 Body:
 {
-    "storeID": <int:storeID>,
-    "name': <string:name>,
+    "storeID": <int:storeID>,       #required
+    "name': <string:name>,          #required
 }
 ```
 In case there is no store in our database with this ID, we just created a new one for you! We return a 201 Created response with this store you just created:
@@ -491,6 +555,12 @@ Did you log in a long time ago? You should log in again since our protected syst
     "description": "Signature has expired",
     "error": "Authorization Required",
     "status_code": 401
+}
+```
+In case you forgot to put a store name, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "What store is this?"
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
