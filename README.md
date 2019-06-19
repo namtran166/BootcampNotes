@@ -95,56 +95,56 @@ When the client enters an unregistered user, or an registered user with incorrec
 }
 ```
 
-## GET /books
-What is a bookstore without our favorite books? With this endpoint we can easily access to all books we currently have in our database! Just a quick reminder, don't forget to put some books in the store first!
+## GET /items
+What is a store without our favorite items? With this endpoint we can easily access to all items we currently have in our database! Just a quick reminder, don't forget to put some items in the store first!
 ```
 No request body needed.
 ```
 #### Successful request
-Whatever the request is, there is always a 200 OK response with our books (none or many):
+Whatever the request is, there is always a 200 OK response with our items (none or many):
 ```
 [
     {
-        "book_id": <int:book_id>,
+        "item_id": <int:item_id>,
         "name": <string:name>,
-        "author": <string:author>,
+        "price": <float:price>,
         "store_id": <int:store_id>
     },
     ...
 ]
 ```
 
-## GET /books/<int:book_id>
-With this endpoint we can easily access to a particular book we currently have in our database! Just a quick reminder, don't forget to put the bookID!
+## GET /items/<int:item_id>
+With this endpoint we can easily access to a particular item we currently have in our database! Just a quick reminder, don't forget to put the item_id!
 ```
 No request body needed.
 ```
 #### Successful request
-In case you find your book, congratulations! There is always a 200 OK response with your book as well:
+In case you find your item, congratulations! There is always a 200 OK response with your item as well:
 ```
 {
-    "book_id": <int:book_id>,
+    "item_id": <int:item_id>,
     "name": <string:name>,
-    "author": <string:author>,
+    "price": <float:price>,
     "store_id": <int:store_id>
 }
 ```
 #### Unsuccessful request
-Too bad we cannot find your book! We return a 404 Not Found response to notice you that:
+Too bad we cannot find your item! We return a 404 Not Found response to notify you that:
 ```
 {
-    "message": "Book not found."
+    "message": "Item not found."
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
 ```
 {
-    "message": "An error occurred when trying to get this book."
+    "message": "An error occurred when trying to get this item."
 }
 ```
 
-## POST /books/<int:book_id>
-With this endpoint we can easily upload our favorite book we currently have to our store! Just a quick reminder, don't forget to put the bookID!
+## POST /items/<int:item_id>
+With this endpoint we can easily upload our favorite item we currently have to our store! Just a quick reminder, don't forget to put the item_id!
 ```
 Header:
     Content-Type: application/json
@@ -152,48 +152,48 @@ Header:
 
 Body:
 {
-    "book_id": <int:book_id>,       #required
-    "name": <string:name>,          #required
-    "author": <string:author>,      #required
-    "store_id": <int:store_id>      #required
+    "item_id": <int:item_id>,           #required
+    "name": <string:name>,              #required
+    "price": <float:price>,             #required
+    "store_id": <int:store_id>          #required
 }
 ```
 #### Successful request
-In case we can upload your book, congratulations! We return a 201 Created response with your book as well:
+In case we can upload your item, congratulations! We return a 201 Created response with your item as well:
 ```
 {
-    "book_id": <int:book_id>,
+    "item_id": <int:item_id>,
     "name": <string:name>,
-    "author": <string:author>,
+    "price": <float:price>,
     "store_id": <int:store_id>
 }
 ```
 #### Unsuccessful request
-Too bad we cannot upload your book since someone already registered for this bookID! A 400 Bad Request response will be return with this message:
+Too bad we cannot upload your item since someone already registered for this item_id! A 400 Bad Request response will be return with this message:
 ```
 {
-    "message": "A book with book_id <int:book_id> already exists."
+    "message": "An item with item_id <int:item_id> already exists."
 }
 ```
-In case you forgot to put a book name, a 400 Bad Request response will be sent back alongside with this message:
+In case you forgot to put an item name, a 400 Bad Request response will be sent back alongside with this message:
 ```
 {
-    "message": "This book needs a name."
+    "message": "This item needs a name."
 }
 ```
-The same thing happens when you forget to put an author, a 400 Bad Request response will be returned with this message:
+The same thing happens when you forget to put a price, a 400 Bad Request response will be returned with this message:
 ```
 {
-    "message": "This book cannot be written by no one."
+    "message": "This item needs a price."
 }
 ```
-In case you forgot to put a storeID, a 400 Bad Request response will be sent back alongside with this message:
+In case you forgot to put a store_id, a 400 Bad Request response will be sent back alongside with this message:
 ```
 {
-    "message": "Every book needs a store to sell."
+    "message": "This item needs a store to sell."
 }
 ```
-Did you forget to authorize yourself? You bet. Since our books are precious, we cannot allow anyone to go and just upload some random books! A 401 Unauthorized reminder for you!
+Did you forget to authorize yourself? You bet. Since our items are precious, we cannot allow anyone to go and just upload some random items! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Request does not contain an access token",
@@ -212,31 +212,31 @@ Did you log in a long time ago? You should log in again since our protected syst
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
 ```
 {
-    "message": "An error occurred when trying to post this book."
+    "message": "An error occurred when trying to post this item."
 }
 ```
 
-## DELETE /books/<int:book_id>
-With this endpoint we can easily remove our unwanted book we currently have in our database! Just a quick reminder, don't forget to put the bookID!
+## DELETE /items/<int:item_id>
+With this endpoint we can easily remove our unwanted item we currently have in our database! Just a quick reminder, don't forget to put the item_id!
 ```
 Header:
     Authorization Required
 ```
 #### Successful request
-In case we can remove the book you hated, congratulations! We return a 200 OK response with this message:
+In case we can remove the item you hated, congratulations! We return a 200 OK response with this message:
 ```
 {
-    "message": "Book deleted."
+    "message": "Item deleted."
 }
 ```
 #### Unsuccessful request
-Too bad we cannot find the book you hated, maybe it was removed a long time ago! A 404 Not Found response will be return with this message:
+Too bad we cannot find the item you hated, maybe it was removed a long time ago! A 404 Not Found response will be return with this message:
 ```
 {
-    "message": "There is no book with book_id <int:book_id>."
+    "message": "There is no item with item_id <int:item_id>."
 }
 ```
-Did you forget to authorize yourself? You bet. Since our books are precious, we cannot allow anyone to go and just delete some random books! A 401 Unauthorized reminder for you!
+Did you forget to authorize yourself? You bet. Since our items are precious, we cannot allow anyone to go and just delete some random items! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Request does not contain an access token",
@@ -255,12 +255,12 @@ Did you log in a long time ago? You should log in again since our protected syst
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
 ```
 {
-    "message": "An error occurred when trying to delete this book."
+    "message": "An error occurred when trying to delete this item."
 }
 ```
 
-## PUT /books/<int:book_id>
-Did you put wrong information about your favorite book into the database? Well, you can simply use this PUT method, it will update an existing one based on the storeID you provided.
+## PUT /items/<int:item_id>
+Did you put wrong information about your favorite item into the database? Well, you can simply use this PUT method, it will update an existing one based on the store_id you provided.
 ```
 Header:
     Content-Type: application/json
@@ -268,42 +268,42 @@ Header:
 
 Body:
 {
-    "book_id": <int:book_id>,       #required
+    "item_id": <int:item_id>,       #required
     "name": <string:name>,          #required   
-    "author": <string:author>,      #required
+    "price": <float:price>   ,      #required
     "store_id": <int:store_id>      #required
 }
 ```
 #### Successful request
-Yay we found your book in our database! We return a 200 OK response with the updated book:
+Yay we found your item in our database! We return a 200 OK response with the updated item:
 ```
 {
-    "book_id": <int:book_id>,
+    "item_id": <int:item_id>,
     "name": <string:name>,
-    "author": <string:author>,
+    "price": <float:price>,
     "store_id": <int:store_id>
 }
 ```
 #### Unsuccessful request
-In case you forgot to put a book name, a 400 Bad Request response will be sent back alongside with this message:
+In case you forgot to put an item name, a 400 Bad Request response will be sent back alongside with this message:
 ```
 {
-    "message": "This book needs a name."
+    "message": "This item needs a name."
 }
 ```
-The same thing happens when you forget to put an author, a 400 Bad Request response will be returned with this message:
+The same thing happens when you forget to put a price, a 400 Bad Request response will be returned with this message:
 ```
 {
-    "message": "This book cannot be written by no one."
+    "message": "This item needs a price."
 }
 ```
-In case you forgot to put a storeID, a 400 Bad Request response will be sent back alongside with this message:
+In case you forgot to put a store_id, a 400 Bad Request response will be sent back alongside with this message:
 ```
 {
-    "message": "Every book needs a store to sell."
+    "message": "This item needs a store to sell."
 }
 ```
-Did you forget to authorize yourself? You bet. Since our books are precious, we cannot allow anyone to go and just update some random books! A 401 Unauthorized reminder for you!
+Did you forget to authorize yourself? You bet. Since our items are precious, we cannot allow anyone to go and just update some random items! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Request does not contain an access token",
@@ -328,12 +328,12 @@ We did not find the store you want to update. Maybe a 404 Not Found response mig
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
 ```
 {
-    "message": "An error occurred when trying to put this book."
+    "message": "An error occurred when trying to put this item."
 }
 ```
 
 ## GET /stores
-We have some books, now we need to put them in some stores for others to read! This endpoint helps us acknowledge what stores we currently have! Just a quick reminder, don't forget to put some stores in the database first!
+We have some items, now we need to put them in some stores for others to buy! This endpoint helps us acknowledge what stores we currently have! Just a quick reminder, don't forget to put some stores in the database first!
 ```
 No request body needed.
 ```
@@ -344,8 +344,8 @@ Whatever the request is, there is always a 200 OK response with our stores (none
     {
         "store_id": <int:store_id>,
         "name": <string:name>,
-        "books": [
-            book1_info,...
+        "items": [
+            item1_info,...
         ]
     }
 ]
@@ -353,7 +353,7 @@ Whatever the request is, there is always a 200 OK response with our stores (none
 ```
 
 ## GET /stores/store_id
-With this endpoint we can easily access to a particular store we currently have in our database, and all the books in this store as well! Just a quick reminder, don't forget to put the storeID!
+With this endpoint we can easily access to a particular store we currently have in our database, and all the items in this store as well! Just a quick reminder, don't forget to put the store_id!
 ```
 No request body needed.
 ```
@@ -363,8 +363,8 @@ In case you find your store, congratulations! There is always a 200 OK response 
 {
     "store_id": <int:store_id>,
     "name": <string:name>,
-    "books": [
-        book1_info,...
+    "items": [
+        item1_info,...
     ]
 }
 ```
@@ -383,7 +383,7 @@ When there is some unexpected error within our internal server, a 500 Internal S
 ```
 
 ## POST /stores/<int:store_id>
-With this endpoint we can easily upload our favorite store we currently have to our database! Just a quick reminder, don't forget to put the storeID!
+With this endpoint we can easily upload our favorite store we currently have to our database! Just a quick reminder, don't forget to put the store_id!
 ```
 Header:
     Content-Type: application/json
@@ -401,13 +401,13 @@ In case we can upload your store, congratulations! We return a 201 Created respo
 {
     "store_id": <int:store_id>,
     "name": <string:name>,
-    "books": [
-        book1_info,...
+    "items": [
+        item1_info,...
     ]
 }
 ```
 #### Unsuccessful request
-Too bad we cannot upload your store since someone already registered for this storeID! A 400 Bad Request response will be return with this message:
+Too bad we cannot upload your store since someone already registered for this store_id! A 400 Bad Request response will be return with this message:
 ```
 {
     "message": "A store with store_id <int:store_id> already exists."
@@ -443,7 +443,7 @@ When there is some unexpected error within our internal server, a 500 Internal S
 ```
 
 ## DELETE /stores/<int:store_id>
-With this endpoint we can easily remove our unwanted store we currently have in our database! Just a quick reminder, remove all the books in the store before deleting the store!
+With this endpoint we can easily remove our unwanted store we currently have in our database! Just a quick reminder, remove all the items in the store before deleting the store!
 ```
 Header:
     Authorization Required
@@ -456,10 +456,10 @@ In case we can remove the store you hated, congratulations! We return a 200 OK r
 }
 ```
 #### Unsuccessful request
-We found the store, but there are some books in this store, so we cannot just remove it! A 400 Bad Request for you to make sure delete all the books in the store before deleting the store!
+We found the store, but there are some items in this store, so we cannot just remove it! A 400 Bad Request for you to make sure delete all the items in the store before deleting the store!
 ```
 {
-    "message": "This store still contains some books."
+    "message": "This store still contains some items."
 }
 ```
 In case you forgot to put a store name, a 400 Bad Request response will be sent back alongside with this message:
@@ -498,7 +498,7 @@ When there is some unexpected error within our internal server, a 500 Internal S
 ```
 
 ## PUT /stores/<int:store_id>
-Did you put wrong information about your favorite store into the database? Well, you can simply use this PUT method, it will update an existing one based on the storeID you provided.
+Did you put wrong information about your favorite store into the database? Well, you can simply use this PUT method, it will update an existing one based on the store_id you provided.
 ```
 Header:
     Content-Type: application/json
@@ -516,8 +516,8 @@ Yay we found your store in our database! We return a 200 OK response with the up
 {
     "store_id": <int:store_id>,
     "name": <string:name>,
-    "books": [
-        book1_info,...
+    "items": [
+        item1_info,...
     ]
 }
 ```

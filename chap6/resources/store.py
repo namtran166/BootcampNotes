@@ -9,7 +9,7 @@ class Store(Resource):
     parser.add_argument('name',
                         type=str,
                         required=True,
-                        help='What store is this?'
+                        help='This store needs a name.'
                         )
 
     # No need for authentication since GET method is safe
@@ -18,7 +18,7 @@ class Store(Resource):
             store = StoreModel.find_by_store_id(store_id)
             if store:
                 return store.json(), 200
-            return {'message': 'Store not found!'}, 404
+            return {'message': 'Store not found.'}, 404
         except:
             return {'message': 'An error occurred when trying to get this store.'}, 500
 
@@ -41,14 +41,14 @@ class Store(Resource):
         if store is None:
             return {'message': "There is no store with store_id {}.".format(store_id)}, 404
         else:
-            if len(store.books.all()) == 0:
+            if len(store.items.all()) == 0:
                 try:
                     store.delete_from_db()
                     return {'message': 'Store deleted.'}, 200
                 except:
                     return {'message': 'An error occurred when trying to delete this store.'}, 500
             else:
-                return {'message': 'This store still contains some books.'}, 400
+                return {'message': 'This store still contains some items.'}, 400
 
     @jwt_required()
     def put(self, store_id):

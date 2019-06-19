@@ -2,7 +2,7 @@ from flask import Flask
 from flask_jwt import JWT
 from flask_restful import Api
 
-from resources.book import Book, BookList
+from resources.item import Item, ItemList
 from resources.store import Store, StoreList
 from resources.user import UserRegister
 from security import authenticate, identity
@@ -23,8 +23,8 @@ jwt = JWT(app, authenticate, identity)
 
 api.add_resource(Store, '/stores/<int:store_id>')
 api.add_resource(StoreList, '/stores')
-api.add_resource(Book, '/books/<int:book_id>')
-api.add_resource(BookList, '/books')
+api.add_resource(Item, '/items/<int:item_id>')
+api.add_resource(ItemList, '/items')
 api.add_resource(UserRegister, '/register')
 
 if __name__ == '__main__':

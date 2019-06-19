@@ -7,7 +7,7 @@ class StoreModel(db.Model):
     store_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
 
-    books = db.relationship('BookModel', lazy='dynamic')
+    items = db.relationship('ItemModel', lazy='dynamic')
 
     def __init__(self, store_id, name):
         self.store_id = store_id
@@ -17,7 +17,7 @@ class StoreModel(db.Model):
         return {
             'store_id': self.store_id,
             'name': self.name,
-            'books': [book.json() for book in self.books.all()]
+            'items': [item.json() for item in self.items.all()]
         }
 
     @classmethod
