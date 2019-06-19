@@ -126,7 +126,7 @@ Whatever the request is, there is always a 200 OK response with our books (none 
 {
     "books": [
         {
-            "bookID": <int:bookID>,
+            "book_id": <int:book_id>,
             "name": <string:name>,
             "author": <string:author>,
             "store_id": <int:store_id>
@@ -136,7 +136,7 @@ Whatever the request is, there is always a 200 OK response with our books (none 
 }
 ```
 
-## GET /books/bookID
+## GET /books/<int:book_id>
 With this endpoint we can easily access to a particular book we currently have in our database! Just a quick reminder, don't forget to put the bookID!
 ```
 No request body needed!
@@ -144,7 +144,7 @@ No request body needed!
 In case you find your book, congratulations! There is always a 200 OK response with your book as well:
 ```
 {
-    "bookID": <int:bookID>,
+    "book_id": <int:book_id>,
     "name": <string:name>,
     "author": <string:author>,
     "store_id": <int:store_id>
@@ -163,7 +163,7 @@ When there is some unexpected error within our internal server, a 500 Internal S
 }
 ```
 
-## POST /books/bookID
+## POST /books/<int:book_id>
 With this endpoint we can easily upload our favorite book we currently have to our database! Just a quick reminder, don't forget to put the bookID!
 ```
 Header:
@@ -172,7 +172,7 @@ Header:
 
 Body:
 {
-    "bookID": <int:bookID>,         #required
+    "book_id": <int:book_id>,       #required
     "name": <string:name>,          #required
     "author": <string:author>,      #required
     "store_id": <int:store_id>      #required
@@ -181,7 +181,7 @@ Body:
 In case we can upload your book, congratulations! We return a 201 Created response with your book as well:
 ```
 {
-    "bookID": <int:bookID>,
+    "book_id": <int:book_id>,
     "name": <string:name>,
     "author": <string:author>,
     "store_id": <int:store_id>
@@ -190,7 +190,7 @@ In case we can upload your book, congratulations! We return a 201 Created respon
 Too bad we cannot upload your book since someone already registered for this bookID! A 400 Bad Request response will be return with this message:
 ```
 {
-    "message": "A book with bookID <int:bookID> already exists."
+    "message": "A book with book_id <int:book_id> already exists."
 }
 ```
 Did you forgot to authorize yourself? You bet. Since our books are precious, we cannot allow anyone to go and just upload some random books! A 401 Unauthorized reminder for you!
@@ -234,7 +234,7 @@ When there is some unexpected error within our internal server, a 500 Internal S
 }
 ```
 
-## DELETE /books/bookID
+## DELETE /books/<int:book_id>
 With this endpoint we can easily remove our unwanted book we currently have in our database! Just a quick reminder, don't forget to put the bookID!
 ```
 Header:
@@ -249,7 +249,7 @@ In case we can remove the book you hated, congratulations! We return a 200 OK re
 Too bad we cannot find the book you hated, maybe it was removed a long time ago! A 404 Not Found response will be return with this message:
 ```
 {
-    "message": "There is no book with bookID <int:bookID>."
+    "message": "There is no book with book_id <int:book_id>."
 }
 ```
 Did you forgot to authorize yourself? You bet. Since our books are precious, we cannot allow anyone to go and just delete some random books! A 401 Unauthorized reminder for you!
@@ -275,7 +275,7 @@ When there is some unexpected error within our internal server, a 500 Internal S
 }
 ```
 
-## PUT /books/bookID
+## PUT /books/<int:book_id>
 Unsure you put this book to our database or not? Well, you can simply use this PUT method, it will create a new book or update an existing one based on the bookID you provided.
 ```
 Header:
@@ -284,7 +284,7 @@ Header:
 
 Body:
 {
-    "bookID": <int:bookID>,         #required
+    "book_id": <int:book_id>,         #required
     "name": <string:name>,          #required   
     "author": <string:author>,      #required
     "store_id": <int:store_id>      #required
@@ -293,7 +293,7 @@ Body:
 In case there is no book in our database with this ID, we just created a new one for you! We return a 201 Created response with this book you just created:
 ```
 {
-    "bookID": <int:bookID>,
+    "book_id": <int:book_id>,
     "name": <string:name>,
     "author": <string:author>,
     "store_id": <int:store_id>
@@ -302,7 +302,7 @@ In case there is no book in our database with this ID, we just created a new one
 Yay we found your book in our database! We return a 200 OK response with the updated book:
 ```
 {
-    "bookID": <int:bookID>,
+    "book_id": <int:book_id>,
     "name": <string:name>,
     "author": <string:author>,
     "store_id": <int:store_id>
@@ -336,7 +336,7 @@ The same thing happens when you forget to put an author, a 400 Bad Request respo
     "message": "This book cannot be written by no one!"
 }
 ```
-In case you forgot to put a storeID, a 400 Bad Request response will be sent back alongside with this message:
+In case you forgot to put a store ID, a 400 Bad Request response will be sent back alongside with this message:
 ```
 {
     "message": "Every book needs a store to sell!"
@@ -359,7 +359,7 @@ Whatever the request is, there is always a 200 OK response with our stores (none
 {
     "stores": [
         {
-            "storeID": <int:storeID>,
+            "store_id": <int:store_id>,
             "name": <string:name>,
             "books": [
                 book1_info,...
@@ -369,7 +369,7 @@ Whatever the request is, there is always a 200 OK response with our stores (none
 }
 ```
 
-## GET /stores/storeID
+## GET /stores/store_id
 With this endpoint we can easily access to a particular store we currently have in our database, and all the books in this store as well! Just a quick reminder, don't forget to put the storeID!
 ```
 No request body needed!
@@ -377,7 +377,7 @@ No request body needed!
 In case you find your store, congratulations! There is always a 200 OK response with your store as well:
 ```
 {
-    "storeID": <int:storeID>,
+    "store_id": <int:store_id>,
     "name": <string:name>,
     "books": [
         book1_info,...
@@ -397,7 +397,7 @@ When there is some unexpected error within our internal server, a 500 Internal S
 }
 ```
 
-## POST /stores/storeID
+## POST /stores/store_id
 With this endpoint we can easily upload our favorite store we currently have to our database! Just a quick reminder, don't forget to put the storeID!
 ```
 Header:
@@ -406,14 +406,14 @@ Header:
 
 Body:
 {
-    "storeID": <int:storeID>,       #required
+    "store_id": <int:store_id>,       #required
     "name': <string:name>,          #required
 }
 ```
 In case we can upload your store, congratulations! We return a 201 Created response with your store as well:
 ```
 {
-    "storeID": <int:storeID>,
+    "store_id": <int:store_id>,
     "name": <string:name>,
     "books": [
         book1_info,...
@@ -423,7 +423,7 @@ In case we can upload your store, congratulations! We return a 201 Created respo
 Too bad we cannot upload your store since someone already registered for this storeID! A 400 Bad Request response will be return with this message:
 ```
 {
-    "message": "A store with storeID <int:storeID> already exists."
+    "message": "A store with store_id <int:store_id> already exists."
 }
 ```
 Did you forgot to authorize yourself? You bet. Since our stores are important, we cannot allow anyone to go and just upload some random stores! A 401 Unauthorized reminder for you!
@@ -455,7 +455,7 @@ When there is some unexpected error within our internal server, a 500 Internal S
 }
 ```
 
-## DELETE /stores/storeID
+## DELETE /stores/<int:store_id>
 With this endpoint we can easily remove our unwanted store we currently have in our database! Just a quick reminder, remove all the books in the store before deleting the store!
 ```
 Header:
@@ -470,7 +470,7 @@ In case we can remove the store you hated, congratulations! We return a 200 OK r
 Too bad we cannot find the store you hated, maybe it was removed a long time ago! A 404 Not Found response will be return with this message:
 ```
 {
-    "message": "There is no store with storeID <int:bookID>"
+    "message": "There is no store with store_id <int:store_id>"
 }
 ```
 We found the store, but there are some books in this store, so we cannot just remove it! A 400 Bad Request for you to make sure delete all the books in the store before deleting the store!
@@ -508,7 +508,7 @@ When there is some unexpected error within our internal server, a 500 Internal S
 }
 ```
 
-## PUT /stores/storeID
+## PUT /stores/<int:store_id>
 Unsure you put this store to our database or not? Well, you can simply use this PUT method, it will create a new store or update an existing one based on the storeID you provided.
 ```
 Header:
@@ -517,14 +517,14 @@ Header:
 
 Body:
 {
-    "storeID": <int:storeID>,       #required
+    "store_id": <int:store_id>,       #required
     "name': <string:name>,          #required
 }
 ```
 In case there is no store in our database with this ID, we just created a new one for you! We return a 201 Created response with this store you just created:
 ```
 {
-    "storeID": <int:storeID>,
+    "store_id": <int:store_id>,
     "name": <string:name>,
     "books": [
         book1_info,...
@@ -534,7 +534,7 @@ In case there is no store in our database with this ID, we just created a new on
 Yay we found your store in our database! We return a 200 OK response with the updated store:
 ```
 {
-    "storeID": <int:storeID>,
+    "store_id": <int:store_id>,
     "name": <string:name>,
     "books": [
         book1_info,...

@@ -1,27 +1,28 @@
 from db import db
 
+
 class BookModel(db.Model):
     __tablename__ = 'books'
 
-    bookID = db.Column(db.Integer, primary_key = True)
+    book_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     author = db.Column(db.String(80))
-    store_id = db.Column(db.Integer, db.ForeignKey('stores.storeID'))
+    store_id = db.Column(db.Integer, db.ForeignKey('stores.store_id'))
 
     store = db.relationship('StoreModel')
 
-    def __init__(self, bookID, name, author, store_id):
-        self.bookID = bookID
+    def __init__(self, book_id, name, author, store_id):
+        self.book_id = book_id
         self.name = name
         self.author = author
         self.store_id = store_id
 
     def json(self):
-        return {'bookID': self.bookID, 'name': self.name, 'author': self.author, 'store_id': self.store_id}
+        return {'book_id': self.book_id, 'name': self.name, 'author': self.author, 'store_id': self.store_id}
 
     @classmethod
-    def find_by_bookID(cls, bookID):
-        return cls.query.filter_by(bookID = bookID).first()
+    def find_by_book_id(cls, book_id):
+        return cls.query.filter_by(book_id=book_id).first()
 
     def save_to_db(self):
         db.session.add(self)

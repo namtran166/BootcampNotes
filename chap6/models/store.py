@@ -1,27 +1,28 @@
 from db import db
 
+
 class StoreModel(db.Model):
     __tablename__ = 'stores'
 
-    storeID = db.Column(db.Integer, primary_key = True)
+    store_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
 
-    books = db.relationship('BookModel', lazy = 'dynamic')
+    books = db.relationship('BookModel', lazy='dynamic')
 
-    def __init__(self, storeID, name):
-        self.storeID = storeID
+    def __init__(self, store_id, name):
+        self.store_id = store_id
         self.name = name
 
     def json(self):
         return {
-            'storeID': self.storeID,
+            'store_id': self.store_id,
             'name': self.name,
             'books': [book.json() for book in self.books.all()]
         }
 
     @classmethod
-    def find_by_storeID(cls, storeID):
-        return cls.query.filter_by(storeID = storeID).first()
+    def find_by_store_id(cls, store_id):
+        return cls.query.filter_by(store_id=store_id).first()
 
     def save_to_db(self):
         db.session.add(self)

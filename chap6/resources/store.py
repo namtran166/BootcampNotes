@@ -3,18 +3,19 @@ from flask_restful import Resource, reqparse
 
 from models.store import StoreModel
 
+
 class Store(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('name',
-        type = str,
-        required = True,
-        help = 'What store is this?'
-    )
+                        type=str,
+                        required=True,
+                        help='What store is this?'
+                        )
 
     # No need for authentication since GET method is safe
-    def get(self, storeID):
+    def get(self, store_id):
         try:
-            store = StoreModel.find_by_storeID(storeID)
+            store = StoreModel.find_by_store_id(store_id)
             if store:
                 return store.json(), 200
             return {'message': 'Store not found!'}, 404
@@ -22,23 +23,23 @@ class Store(Resource):
             return {'message': 'An error occurred when trying to get this store.'}, 500
 
     @jwt_required()
-    def post(self, storeID):
-        if StoreModel.find_by_storeID(storeID):
-            return {'message': 'A store with storeID {} already exists.'.format(storeID)}, 400
+    def post(self, store_id):
+        if StoreModel.find_by_store_id(store_id):
+            return {'message': 'A store with store_id {} already exists.'.format(store_id)}, 400
 
         data = Store.parser.parse_args()
         try:
-            store = StoreModel(storeID, data['name'])
+            store = StoreModel(store_id, data['name'])
             store.save_to_db()
         except:
             return {'message': 'An error occurred when trying to post this store.'}, 500
         return store.json(), 201
 
     @jwt_required()
-    def delete(self, storeID):
-        store = StoreModel.find_by_storeID(storeID)
+    def delete(self, store_id):
+        store = StoreModel.find_by_store_id(store_id)
         if store is None:
-            return {'message': "There is no store with storeID {}.".format(storeID)}, 404
+            return {'message': "There is no store with store_id {}.".format(store_id)}, 404
         else:
             if len(store.books.all()) == 0:
                 try:
@@ -50,12 +51,12 @@ class Store(Resource):
                 return {'message': 'This store still contains some books.'}, 400
 
     @jwt_required()
-    def put(self, storeID):
+    def put(self, store_id):
         data = Store.parser.parse_args()
-        store = StoreModel.find_by_storeID(storeID)
+        store = StoreModel.find_by_store_id(store_id)
         try:
             if store is None:
-                store = StoreModel(storeID, data['name'])
+                store = StoreModel(store_id, data['name'])
                 store.save_to_db()
                 return store.json(), 201
             else:
@@ -66,5 +67,6 @@ class Store(Resource):
 
 
 class StoreList(Resource):
-    def get(self):
+    @staticmethod
+    def get():
         return {'stores': [store.json() for store in StoreModel.query.all()]}
