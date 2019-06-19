@@ -18,7 +18,12 @@ class BookModel(db.Model):
         self.store_id = store_id
 
     def json(self):
-        return {'book_id': self.book_id, 'name': self.name, 'author': self.author, 'store_id': self.store_id}
+        return {
+            'book_id': self.book_id,
+            'name': self.name,
+            'author': self.author,
+            'store_id': self.store_id
+        }
 
     @classmethod
     def find_by_book_id(cls, book_id):

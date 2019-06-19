@@ -56,9 +56,7 @@ class Store(Resource):
         store = StoreModel.find_by_store_id(store_id)
         try:
             if store is None:
-                store = StoreModel(store_id, data['name'])
-                store.save_to_db()
-                return store.json(), 201
+                return {'message': 'Store not found.'}, 404
             else:
                 store.name = data['name']
                 return store.json(), 200
@@ -69,4 +67,4 @@ class Store(Resource):
 class StoreList(Resource):
     @staticmethod
     def get():
-        return {'stores': [store.json() for store in StoreModel.query.all()]}
+        return [store.json() for store in StoreModel.query.all()]

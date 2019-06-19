@@ -1,29 +1,5 @@
 A project created based on the REST APIs with Flask and Python course taught by Jose Salvatierra
 
-# Preparation
-
-## Set up virtual environment and required Python package
-For this small project, we need to install virtual environment and some Python libraries, including Flask, Flask-JWT, Flask-RESTful, and Flask-SQLAlchemy. I am using Python 3.7.3, but other versions of Python are also supported.
-```
-$ pip3.7 install virtualenv
-$ virtualenv -p python3 /path_to_your_virtualenv       # create your own path to virtualenv
-$ source your_virtualenv_path/bin/activate             # activate your virtualenv
-$ pip3.7 install Flask                                 # install Flask
-$ pip3.7 install Flask-JWT                             # install Flask-JWT
-$ pip3.7 install Flask-RESTful                         # install Flask-RESTful
-$ pip3.7 install Flask-SQLAlchemy.                     # install Flask-SQLAlchemy
-$ pip3.7 freeze                                        # double check the requirements
-$ deactivate                                           # exit the current virtualenv
-```
-
-## Start the server
-```
-$ source your_virtualenv_path/bin/activate             # activate your virtualenv
-$ cd folder_name/chap6
-$ python app.py
-```
-Then we can open the server at http://127.0.0.1:5000/
-
 # API Docs
 
 ## /register
@@ -38,22 +14,18 @@ Body:
     "password": <string:password>       #required
 }
 ```
+#### Successful Request
 When an user is created successfully, a 201 Created response will be sent back, alongside with this message:
 ```
 {
     "message": "User created successfully."
 }
 ```
+#### Unsuccessful Request
 When an user with this username already exists in our database, a 400 Bad Request response will be sent back, alongside with this message:
 ```
 {
     "message": "A user with that username already exists."
-}
-```
-When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
-```
-{
-    "message": "An error occurred when trying to create this user."
 }
 ```
 In case you forgot to put an username, a 400 Bad Request response will be sent back alongside with this message:
@@ -72,7 +44,12 @@ The same thing happens when you forget to put a password, a 400 Bad Request resp
     }
 }
 ```
-
+When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
+```
+{
+    "message": "An error occurred when trying to create this user."
+}
+```
 ## /auth
 Once you create an user in our server, you can retrieve the access token anytime you want! This endpoint will return an access token whenever a registered user information is provided.
 ```
@@ -85,20 +62,14 @@ Body:
     "password": <string:password>       #required
 }
 ```
+#### Successful request
 When a registered user with correct password requests successfully, a 200 OK response will be sent back, alongside with the access token:
 ```
 {
     "access_token": <string:access_token>
 }
 ```
-When the client enters an unregistered user, or an registered user with incorrect password, or missing either password or username, a 401 Unauthorized response will be sent back, alongside with this message:
-```
-{
-    "description": "Invalid credentials",
-    "error": "Bad Request",
-    "status_code": 401
-}
-```
+#### Unsuccessful request
 In case you forgot to put an username, a 400 Bad Request response will be sent back alongside with this message:
 ```
 {
@@ -115,32 +86,40 @@ The same thing happens when you forget to put a password, a 400 Bad Request resp
     }
 }
 ```
-
-## GET /books
-What is even a bookstore without our favorite books? With this endpoint we can easily access to all books we currently have in our database! Just a quick reminder, don't forget to put some books in the database first!
-```
-No request body needed!
-```
-Whatever the request is, there is always a 200 OK response with our books (none or many):
+When the client enters an unregistered user, or an registered user with incorrect password, or missing either password or username, a 401 Unauthorized response will be sent back, alongside with this message:
 ```
 {
-    "books": [
-        {
-            "book_id": <int:book_id>,
-            "name": <string:name>,
-            "author": <string:author>,
-            "store_id": <int:store_id>
-        },
-        ...
-    ]
+    "description": "Invalid credentials",
+    "error": "Bad Request",
+    "status_code": 401
 }
+```
+
+## GET /books
+What is a bookstore without our favorite books? With this endpoint we can easily access to all books we currently have in our database! Just a quick reminder, don't forget to put some books in the store first!
+```
+No request body needed.
+```
+#### Successful request
+Whatever the request is, there is always a 200 OK response with our books (none or many):
+```
+[
+    {
+        "book_id": <int:book_id>,
+        "name": <string:name>,
+        "author": <string:author>,
+        "store_id": <int:store_id>
+    },
+    ...
+]
 ```
 
 ## GET /books/<int:book_id>
 With this endpoint we can easily access to a particular book we currently have in our database! Just a quick reminder, don't forget to put the bookID!
 ```
-No request body needed!
+No request body needed.
 ```
+#### Successful request
 In case you find your book, congratulations! There is always a 200 OK response with your book as well:
 ```
 {
@@ -150,10 +129,11 @@ In case you find your book, congratulations! There is always a 200 OK response w
     "store_id": <int:store_id>
 }
 ```
-Too bad we cannot find your book! However, we find a 404 Not Found response for you:
+#### Unsuccessful request
+Too bad we cannot find your book! We return a 404 Not Found response to notice you that:
 ```
 {
-    "message": "Book not found!"
+    "message": "Book not found."
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
@@ -164,11 +144,11 @@ When there is some unexpected error within our internal server, a 500 Internal S
 ```
 
 ## POST /books/<int:book_id>
-With this endpoint we can easily upload our favorite book we currently have to our database! Just a quick reminder, don't forget to put the bookID!
+With this endpoint we can easily upload our favorite book we currently have to our store! Just a quick reminder, don't forget to put the bookID!
 ```
 Header:
     Content-Type: application/json
-    Authorization: JWT <string:jwt_token>
+    Authorization Required
 
 Body:
 {
@@ -178,6 +158,7 @@ Body:
     "store_id": <int:store_id>      #required
 }
 ```
+#### Successful request
 In case we can upload your book, congratulations! We return a 201 Created response with your book as well:
 ```
 {
@@ -187,13 +168,32 @@ In case we can upload your book, congratulations! We return a 201 Created respon
     "store_id": <int:store_id>
 }
 ```
+#### Unsuccessful request
 Too bad we cannot upload your book since someone already registered for this bookID! A 400 Bad Request response will be return with this message:
 ```
 {
     "message": "A book with book_id <int:book_id> already exists."
 }
 ```
-Did you forgot to authorize yourself? You bet. Since our books are precious, we cannot allow anyone to go and just upload some random books! A 401 Unauthorized reminder for you!
+In case you forgot to put a book name, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "This book needs a name."
+}
+```
+The same thing happens when you forget to put an author, a 400 Bad Request response will be returned with this message:
+```
+{
+    "message": "This book cannot be written by no one."
+}
+```
+In case you forgot to put a storeID, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "Every book needs a store to sell."
+}
+```
+Did you forget to authorize yourself? You bet. Since our books are precious, we cannot allow anyone to go and just upload some random books! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Request does not contain an access token",
@@ -201,30 +201,12 @@ Did you forgot to authorize yourself? You bet. Since our books are precious, we 
     "status_code": 401
 }
 ```
-Did you log in a long time ago? You should log in again since our protected system invalidate unused access token after some time! A 401 Unauthorized reminder for you!
+Did you log in a long time ago? You should log in again since our protected system invalidates unused access token after some time! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Signature has expired",
     "error": "Authorization Required",
     "status_code": 401
-}
-```
-In case you forgot to put a book name, a 400 Bad Request response will be sent back alongside with this message:
-```
-{
-    "message": "What book is this?"
-}
-```
-The same thing happens when you forget to put an author, a 400 Bad Request response will be returned with this message:
-```
-{
-    "message": "This book cannot be written by no one!"
-}
-```
-In case you forgot to put a storeID, a 400 Bad Request response will be sent back alongside with this message:
-```
-{
-    "message": "Every book needs a store to sell!"
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
@@ -238,21 +220,23 @@ When there is some unexpected error within our internal server, a 500 Internal S
 With this endpoint we can easily remove our unwanted book we currently have in our database! Just a quick reminder, don't forget to put the bookID!
 ```
 Header:
-    Authorization: JWT <string:jwt_token>
+    Authorization Required
 ```
+#### Successful request
 In case we can remove the book you hated, congratulations! We return a 200 OK response with this message:
 ```
 {
-    "message": "Book deleted!"
+    "message": "Book deleted."
 }
 ```
+#### Unsuccessful request
 Too bad we cannot find the book you hated, maybe it was removed a long time ago! A 404 Not Found response will be return with this message:
 ```
 {
     "message": "There is no book with book_id <int:book_id>."
 }
 ```
-Did you forgot to authorize yourself? You bet. Since our books are precious, we cannot allow anyone to go and just delete some random books! A 401 Unauthorized reminder for you!
+Did you forget to authorize yourself? You bet. Since our books are precious, we cannot allow anyone to go and just delete some random books! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Request does not contain an access token",
@@ -260,7 +244,7 @@ Did you forgot to authorize yourself? You bet. Since our books are precious, we 
     "status_code": 401
 }
 ```
-Did you log in a long time ago? You should log in again since our protected system invalidate unused access token after some time! A 401 Unauthorized reminder for you!
+Did you log in a long time ago? You should log in again since our protected system invalidates unused access token after some time! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Signature has expired",
@@ -276,29 +260,21 @@ When there is some unexpected error within our internal server, a 500 Internal S
 ```
 
 ## PUT /books/<int:book_id>
-Unsure you put this book to our database or not? Well, you can simply use this PUT method, it will create a new book or update an existing one based on the bookID you provided.
+Did you put wrong information about your favorite book into the database? Well, you can simply use this PUT method, it will update an existing one based on the storeID you provided.
 ```
 Header:
     Content-Type: application/json
-    Authorization: JWT <string:jwt_token>
+    Authorization Required
 
 Body:
 {
-    "book_id": <int:book_id>,         #required
+    "book_id": <int:book_id>,       #required
     "name": <string:name>,          #required   
     "author": <string:author>,      #required
     "store_id": <int:store_id>      #required
 }
 ```
-In case there is no book in our database with this ID, we just created a new one for you! We return a 201 Created response with this book you just created:
-```
-{
-    "book_id": <int:book_id>,
-    "name": <string:name>,
-    "author": <string:author>,
-    "store_id": <int:store_id>
-}
-```
+#### Successful request
 Yay we found your book in our database! We return a 200 OK response with the updated book:
 ```
 {
@@ -308,7 +284,26 @@ Yay we found your book in our database! We return a 200 OK response with the upd
     "store_id": <int:store_id>
 }
 ```
-Did you forgot to authorize yourself? You bet. Since our books are precious, we cannot allow anyone to go and just update some random books! A 401 Unauthorized reminder for you!
+#### Unsuccessful request
+In case you forgot to put a book name, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "This book needs a name."
+}
+```
+The same thing happens when you forget to put an author, a 400 Bad Request response will be returned with this message:
+```
+{
+    "message": "This book cannot be written by no one."
+}
+```
+In case you forgot to put a storeID, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "Every book needs a store to sell."
+}
+```
+Did you forget to authorize yourself? You bet. Since our books are precious, we cannot allow anyone to go and just update some random books! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Request does not contain an access token",
@@ -316,7 +311,7 @@ Did you forgot to authorize yourself? You bet. Since our books are precious, we 
     "status_code": 401
 }
 ```
-Did you log in a long time ago? You should log in again since our protected system invalidate unused access token after some time! A 401 Unauthorized reminder for you!
+Did you log in a long time ago? You should log in again since our protected system invalidates unused access token after some time! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Signature has expired",
@@ -324,22 +319,10 @@ Did you log in a long time ago? You should log in again since our protected syst
     "status_code": 401
 }
 ```
-In case you forgot to put a book name, a 400 Bad Request response will be sent back alongside with this message:
+We did not find the store you want to update. Maybe a 404 Not Found response might remind you:
 ```
 {
-    "message": "What book is this?"
-}
-```
-The same thing happens when you forget to put an author, a 400 Bad Request response will be returned with this message:
-```
-{
-    "message": "This book cannot be written by no one!"
-}
-```
-In case you forgot to put a store ID, a 400 Bad Request response will be sent back alongside with this message:
-```
-{
-    "message": "Every book needs a store to sell!"
+    "message": "Store not found."
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
@@ -352,28 +335,29 @@ When there is some unexpected error within our internal server, a 500 Internal S
 ## GET /stores
 We have some books, now we need to put them in some stores for others to read! This endpoint helps us acknowledge what stores we currently have! Just a quick reminder, don't forget to put some stores in the database first!
 ```
-No request body needed!
+No request body needed.
 ```
+#### Successful request
 Whatever the request is, there is always a 200 OK response with our stores (none or many):
 ```
-{
-    "stores": [
-        {
-            "store_id": <int:store_id>,
-            "name": <string:name>,
-            "books": [
-                book1_info,...
-            ]
-        }
-    ]
-}
+[
+    {
+        "store_id": <int:store_id>,
+        "name": <string:name>,
+        "books": [
+            book1_info,...
+        ]
+    }
+]
+
 ```
 
 ## GET /stores/store_id
 With this endpoint we can easily access to a particular store we currently have in our database, and all the books in this store as well! Just a quick reminder, don't forget to put the storeID!
 ```
-No request body needed!
+No request body needed.
 ```
+#### Successful request
 In case you find your store, congratulations! There is always a 200 OK response with your store as well:
 ```
 {
@@ -384,10 +368,11 @@ In case you find your store, congratulations! There is always a 200 OK response 
     ]
 }
 ```
-Too bad we cannot find your store! However, we find a 404 Not Found response for you:
+#### Unsuccessful request
+Too bad we cannot find your store! We return a 404 Not Found response to notify you that:
 ```
 {
-    "message": "Store not found!"
+    "message": "Store not found."
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
@@ -397,19 +382,20 @@ When there is some unexpected error within our internal server, a 500 Internal S
 }
 ```
 
-## POST /stores/store_id
+## POST /stores/<int:store_id>
 With this endpoint we can easily upload our favorite store we currently have to our database! Just a quick reminder, don't forget to put the storeID!
 ```
 Header:
     Content-Type: application/json
-    Authorization: JWT <string:jwt_token>
+    Authorization Required
 
 Body:
 {
     "store_id": <int:store_id>,       #required
-    "name': <string:name>,          #required
+    "name': <string:name>,            #required
 }
 ```
+#### Successful request
 In case we can upload your store, congratulations! We return a 201 Created response with your store as well:
 ```
 {
@@ -420,13 +406,20 @@ In case we can upload your store, congratulations! We return a 201 Created respo
     ]
 }
 ```
+#### Unsuccessful request
 Too bad we cannot upload your store since someone already registered for this storeID! A 400 Bad Request response will be return with this message:
 ```
 {
     "message": "A store with store_id <int:store_id> already exists."
 }
 ```
-Did you forgot to authorize yourself? You bet. Since our stores are important, we cannot allow anyone to go and just upload some random stores! A 401 Unauthorized reminder for you!
+In case you forgot to put a store name, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "This store needs a name."
+}
+```
+Did you forget to authorize yourself? You bet. Since our stores are important, we cannot allow anyone to go and just upload some random stores! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Request does not contain an access token",
@@ -434,18 +427,12 @@ Did you forgot to authorize yourself? You bet. Since our stores are important, w
     "status_code": 401
 }
 ```
-Did you log in a long time ago? You should log in again since our protected system invalidate unused access token after some time! A 401 Unauthorized reminder for you!
+Did you log in a long time ago? You should log in again since our protected system invalidates unused access token after some time! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Signature has expired",
     "error": "Authorization Required",
     "status_code": 401
-}
-```
-In case you forgot to put a store name, a 400 Bad Request response will be sent back alongside with this message:
-```
-{
-    "message": "What store is this?"
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
@@ -459,27 +446,29 @@ When there is some unexpected error within our internal server, a 500 Internal S
 With this endpoint we can easily remove our unwanted store we currently have in our database! Just a quick reminder, remove all the books in the store before deleting the store!
 ```
 Header:
-    Authorization: JWT <string:jwt_token>
+    Authorization Required
 ```
+#### Successful request
 In case we can remove the store you hated, congratulations! We return a 200 OK response with this message:
 ```
 {
     "message": "Store deleted."
 }
 ```
-Too bad we cannot find the store you hated, maybe it was removed a long time ago! A 404 Not Found response will be return with this message:
-```
-{
-    "message": "There is no store with store_id <int:store_id>"
-}
-```
+#### Unsuccessful request
 We found the store, but there are some books in this store, so we cannot just remove it! A 400 Bad Request for you to make sure delete all the books in the store before deleting the store!
 ```
 {
     "message": "This store still contains some books."
 }
 ```
-Did you forgot to authorize yourself? You bet. Since our stores are important, we cannot allow anyone to go and just delete some random stores! A 401 Unauthorized reminder for you!
+In case you forgot to put a store name, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "This store needs a name."
+}
+```
+Did you forget to authorize yourself? You bet. Since our stores are important, we cannot allow anyone to go and just delete some random stores! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Request does not contain an access token",
@@ -487,7 +476,7 @@ Did you forgot to authorize yourself? You bet. Since our stores are important, w
     "status_code": 401
 }
 ```
-Did you log in a long time ago? You should log in again since our protected system invalidate unused access token after some time! A 401 Unauthorized reminder for you!
+Did you log in a long time ago? You should log in again since our protected system invalidates unused access token after some time! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Signature has expired",
@@ -495,10 +484,10 @@ Did you log in a long time ago? You should log in again since our protected syst
     "status_code": 401
 }
 ```
-In case you forgot to put a store name, a 400 Bad Request response will be sent back alongside with this message:
+Too bad we cannot find the store you hated, maybe it was removed a long time ago! A 404 Not Found response will be return with this message:
 ```
 {
-    "message": "What store is this?"
+    "message": "There is no store with store_id <int:store_id>."
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
@@ -509,28 +498,19 @@ When there is some unexpected error within our internal server, a 500 Internal S
 ```
 
 ## PUT /stores/<int:store_id>
-Unsure you put this store to our database or not? Well, you can simply use this PUT method, it will create a new store or update an existing one based on the storeID you provided.
+Did you put wrong information about your favorite store into the database? Well, you can simply use this PUT method, it will update an existing one based on the storeID you provided.
 ```
 Header:
     Content-Type: application/json
-    Authorization: JWT <string:jwt_token>
+    Authorization Required
 
 Body:
 {
-    "store_id": <int:store_id>,       #required
+    "store_id": <int:store_id>,     #required
     "name': <string:name>,          #required
 }
 ```
-In case there is no store in our database with this ID, we just created a new one for you! We return a 201 Created response with this store you just created:
-```
-{
-    "store_id": <int:store_id>,
-    "name": <string:name>,
-    "books": [
-        book1_info,...
-    ]
-}
-```
+#### Successful request
 Yay we found your store in our database! We return a 200 OK response with the updated store:
 ```
 {
@@ -541,7 +521,14 @@ Yay we found your store in our database! We return a 200 OK response with the up
     ]
 }
 ```
-Did you forgot to authorize yourself? You bet. Since our stores are important, we cannot allow anyone to go and just update some random stores! A 401 Unauthorized reminder for you!
+#### Unsuccessful request
+In case you forgot to put a store name, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "This store needs a name."
+}
+```
+Did you forget to authorize yourself? You bet. Since our stores are important, we cannot allow anyone to go and just update some random stores! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Request does not contain an access token",
@@ -549,7 +536,7 @@ Did you forgot to authorize yourself? You bet. Since our stores are important, w
     "status_code": 401
 }
 ```
-Did you log in a long time ago? You should log in again since our protected system invalidate unused access token after some time! A 401 Unauthorized reminder for you!
+Did you log in a long time ago? You should log in again since our protected system invalidates unused access token after some time! A 401 Unauthorized reminder for you!
 ```
 {
     "description": "Signature has expired",
@@ -557,10 +544,10 @@ Did you log in a long time ago? You should log in again since our protected syst
     "status_code": 401
 }
 ```
-In case you forgot to put a store name, a 400 Bad Request response will be sent back alongside with this message:
+We did not find the store you want to update. Maybe a 404 Not Found response might remind you:
 ```
 {
-    "message": "What store is this?"
+    "message": "Store not found."
 }
 ```
 When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!

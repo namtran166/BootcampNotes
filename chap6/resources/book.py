@@ -64,15 +64,14 @@ class Book(Resource):
         book = BookModel.find_by_book_id(book_id)
 
         try:
-            if book:
+            if book is None:
+                return {'message': 'Book not found.'}, 404
+            else:
                 book.name = data['name']
                 book.author = data['author']
                 book.store_id = data['store_id']
                 book.save_to_db()
                 return book.json(), 200
-            else:
-                book = BookModel(book_id, **data)
-                return book.json(), 201
         except:
             return {'message': 'An error occured while trying to put this book ID'}, 500
 
@@ -80,4 +79,4 @@ class Book(Resource):
 class BookList(Resource):
     @staticmethod
     def get():
-        return {'books': [book.json() for book in BookModel.query.all()]}, 200
+        return [book.json() for book in BookModel.query.all()], 200
