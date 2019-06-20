@@ -154,7 +154,7 @@ Header:
 
 Body:
 {
-    "name': <string:name>,            #required
+    "name': <string:name>             #required
 }
 ```
 #### Successful request
@@ -262,7 +262,7 @@ Header:
 
 Body:
 {
-    "name': <string:name>,          #required
+    "name': <string:name>           #required
 }
 ```
 #### Successful request
@@ -376,7 +376,7 @@ Header:
 Body:
 {
     "name": <string:name>,              #required
-    "price": <float:price>,             #required
+    "price": <float:price>              #required
 }
 ```
 #### Successful request
@@ -490,7 +490,7 @@ Header:
 Body:
 {
     "name": <string:name>,          #required   
-    "price": <float:price>   ,      #required
+    "price": <float:price>          #required
 }
 ```
 #### Successful request
