@@ -2,6 +2,7 @@ from flask_jwt import jwt_required
 from flask_restful import Resource, reqparse
 
 from models.item import ItemModel
+from models.store import StoreModel
 
 
 class Item(Resource):
@@ -16,67 +17,75 @@ class Item(Resource):
                         required=True,
                         help='This item needs a price.'
                         )
-    parser.add_argument('store_id',
-                        type=int,
-                        required=True,
-                        help='This item needs a store to sell.'
-                        )
 
     # No need for authentication since GET method is safe
     @staticmethod
-    def get(item_id):
+    def get(store_id, item_id):
         try:
+            store = StoreModel.find_by_store_id(store_id)
+            if store is None:
+                return {'message': 'Store not found.'}, 404
             item = ItemModel.find_by_item_id(item_id)
-            if item:
-                return item.json(), 200
-            return {'message': 'Item not found.'}, 404
+            if item is None:
+                return {'message': 'Item not found.'}, 404
+
+            return item.json(), 200
         except:
             return {'message': 'An error occurred when trying to get this item.'}, 500
 
     @jwt_required()
-    def post(self, item_id):
-        if ItemModel.find_by_item_id(item_id):
-            return {'message': "An item with item_id '{}' already exists.".format(item_id)}, 400
-
-        data = Item.parser.parse_args()
+    def post(self, store_id):
         try:
-            item = ItemModel(item_id, **data)
+            store = StoreModel.find_by_store_id(store_id)
+            if store is None:
+                return {'message': 'Store not found.'}, 404
+
+            data = Item.parser.parse_args()
+            item = ItemModel(data['name'], data['price'], store_id)
             item.save_to_db()
+            return item.json(), 201
         except:
-            return {'message': 'An error occured while trying to post this item.'}, 500
-        return item.json(), 201
+            return {'message': 'An error occured while trying to post to this store.'}, 500
 
     @jwt_required()
-    def delete(self, item_id):
-        item = ItemModel.find_by_item_id(item_id)
-        if item is None:
-            return {'message': "There is no item with item_id '{}'.".format(item_id)}, 404
-        else:
-            try:
-                item.delete_from_db()
-                return {'message': 'Item deleted'}, 200
-            except:
-                return {'message': 'An error occurred when trying to delete this item.'}, 500
-
-    @jwt_required()
-    def put(self, item_id):
-        data = Item.parser.parse_args()
-        item = ItemModel.find_by_item_id(item_id)
-
+    def delete(self, store_id, item_id):
         try:
+            store = StoreModel.find_by_store_id(store_id)
+            if store is None:
+                return {'message': 'Store not found.'}, 404
+            item = ItemModel.find_by_item_id(item_id)
             if item is None:
-                return {'message': 'Item not found.'}, 404
-            else:
-                item.name = data['name']
-                item.price = data['price']
-                item.store_id = data['store_id']
-                item.save_to_db()
-                return item.json(), 200
+                return {'message': "Item not found.".format(item_id)}, 404
+
+            item.delete_from_db()
+            return {'message': 'Item deleted'}, 200
         except:
-            return {'message': 'An error occured while trying to put this item ID'}, 500
+            return {'message': 'An error occurred when trying to delete this item.'}, 500
+
+    @jwt_required()
+    def put(self, store_id, item_id):
+        try:
+            store = StoreModel.find_by_store_id(store_id)
+            if store is None:
+                return {'message': 'Store not found.'}, 404
+
+            item = ItemModel.find_by_item_id(item_id)
+            if item is None:
+                return {'message': "Item not found.".format(item_id)}, 404
+
+            data = Item.parser.parse_args()
+            item.update(**data)
+            item.save_to_db()
+            return item.json(), 200
+        except:
+            return {'message': 'An error occured while trying to put this book ID'}, 500
 
 
 class ItemList(Resource):
     @staticmethod
-    def get():
-        return [item.json() for item in ItemModel.query.all()], 200
+    def get(store_id):
+        store = StoreModel.find_by_store_id(store_id)
+        if store is None:
+            return {'message': 'Store not found.'}, 404
+
+        return store.json()['items'], 200

@@ -4,13 +4,12 @@ from db import db
 class StoreModel(db.Model):
     __tablename__ = 'stores'
 
-    store_id = db.Column(db.Integer, primary_key=True)
+    store_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(80))
 
     items = db.relationship('ItemModel', lazy='dynamic')
 
-    def __init__(self, store_id, name):
-        self.store_id = store_id
+    def __init__(self, name):
         self.name = name
 
     def json(self):

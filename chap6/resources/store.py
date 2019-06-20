@@ -13,51 +13,49 @@ class Store(Resource):
                         )
 
     # No need for authentication since GET method is safe
-    def get(self, store_id):
+    @staticmethod
+    def get(store_id):
         try:
             store = StoreModel.find_by_store_id(store_id)
-            if store:
-                return store.json(), 200
-            return {'message': 'Store not found.'}, 404
+            if store is None:
+                return {'message': 'Store not found.'}, 404
+            return store.json(), 200
         except:
             return {'message': 'An error occurred when trying to get this store.'}, 500
 
     @jwt_required()
-    def post(self, store_id):
-        if StoreModel.find_by_store_id(store_id):
-            return {'message': 'A store with store_id {} already exists.'.format(store_id)}, 400
-
-        data = Store.parser.parse_args()
+    def post(self):
         try:
-            store = StoreModel(store_id, data['name'])
+            data = Store.parser.parse_args()
+            store = StoreModel(data['name'])
             store.save_to_db()
+            return store.json(), 201
         except:
             return {'message': 'An error occurred when trying to post this store.'}, 500
-        return store.json(), 201
 
     @jwt_required()
     def delete(self, store_id):
-        store = StoreModel.find_by_store_id(store_id)
-        if store is None:
-            return {'message': "There is no store with store_id {}.".format(store_id)}, 404
-        else:
-            if len(store.items.all()) == 0:
-                try:
-                    store.delete_from_db()
-                    return {'message': 'Store deleted.'}, 200
-                except:
-                    return {'message': 'An error occurred when trying to delete this store.'}, 500
-            else:
-                return {'message': 'This store still contains some items.'}, 400
-
-    @jwt_required()
-    def put(self, store_id):
-        data = Store.parser.parse_args()
-        store = StoreModel.find_by_store_id(store_id)
         try:
+            store = StoreModel.find_by_store_id(store_id)
             if store is None:
                 return {'message': 'Store not found.'}, 404
             else:
+                if len(store.items.all()) == 0:
+                    store.delete_from_db()
+                    return {'message': 'Store deleted.'}, 200
+                else:
+                    return {'message': 'This store still contains some items.'}, 400
+        except:
+            return {'message': 'An error occurred when trying to delete this store.'}, 500
+
+    @jwt_required()
+    def put(self, store_id):
+        try:
+            store = StoreModel.find_by_store_id(store_id)
+            if store is None:
+                return {'message': 'Store not found.'}, 404
+            else:
+                data = Store.parser.parse_args()
                 store.name = data['name']
                 return store.json(), 200
         except:
