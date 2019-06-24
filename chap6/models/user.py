@@ -15,6 +15,7 @@ class UserModel(db.Model):
     def __init__(self, *args, **kwargs):
         self.username = kwargs['username'].strip()
         self.hashed_password = generate_password_hash(kwargs['password'])
+        print(self.hashed_password)
         del kwargs['password']
         super(UserModel, self).__init__(*args, **kwargs)
 
@@ -23,7 +24,7 @@ class UserModel(db.Model):
         return cls.query.filter_by(username=username).first()
 
     @classmethod
-    def find_by_user_id(cls, _id):
+    def find_by_id(cls, _id):
         return cls.query.filter_by(id=_id).first()
 
     def save_to_db(self):

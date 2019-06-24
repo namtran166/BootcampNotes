@@ -2,6 +2,7 @@ from flask_jwt import jwt_required
 from flask_restful import Resource, reqparse
 
 from models.item import ItemModel
+from models.store import StoreModel
 from utils import check_internal_server, validate_input
 
 
@@ -30,51 +31,53 @@ class Item(Resource):
     @staticmethod
     @check_internal_server
     def get(store_id, item_id):
-        item = validate_input(store_id=store_id, item_id=item_id)
-        if item[1] == 404:
-            return item
+        result = validate_input(store_id=store_id, item_id=item_id)
+        if result.__class__ != ItemModel:
+            return result
 
-        return item.json(), 200
+        return result.json(), 200
 
     @jwt_required()
     @check_internal_server
     def delete(self, store_id, item_id):
-        item = validate_input(store_id=store_id, item_id=item_id)
-        if item[1] == 404:
-            return item
+        result = validate_input(store_id=store_id, item_id=item_id)
+        if result.__class__ != ItemModel:
+            return result
 
-        item.delete_from_db()
+        result.delete_from_db()
         return {'message': 'Item deleted.'}, 200
 
     @jwt_required()
     @check_internal_server
     def put(self, store_id, item_id):
-        item = validate_input(store_id=store_id, item_id=item_id)
-        if item[1] == 404:
-            return item
+        result = validate_input(store_id=store_id, item_id=item_id)
+        if result.__class__ != ItemModel:
+            return result
 
         data = Item.parser.parse_args()
-        item.update(**data)
-        item.save_to_db()
-        return item.json(), 200
+        print(data)
+        result.name = data['name']
+        result.price = data['price']
+        result.save_to_db()
+        return result.json(), 200
 
 
 class ItemList(Resource):
     @staticmethod
     @check_internal_server
     def get(store_id):
-        store = validate_input(store_id=store_id)
-        if store[1] == 404:
-            return store
+        result = validate_input(store_id=store_id)
+        if result.__class__ != StoreModel:
+            return result
 
-        return store.json()['items'], 200
+        return result.json()['items'], 200
 
     @jwt_required()
     @check_internal_server
     def post(self, store_id):
-        store = validate_input(store_id=store_id)
-        if store[1] == 404:
-            return store
+        result = validate_input(store_id=store_id)
+        if result.__class__ != StoreModel:
+            return result
 
         data = Item.parser.parse_args()
         item = ItemModel(**data)

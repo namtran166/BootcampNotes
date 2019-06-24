@@ -4,7 +4,7 @@ from db import db
 class StoreModel(db.Model):
     __tablename__ = 'stores'
 
-    store_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(80))
 
     items = db.relationship('ItemModel', lazy='dynamic')
@@ -14,14 +14,14 @@ class StoreModel(db.Model):
 
     def json(self):
         return {
-            'id': self.store_id,
+            'id': self.id,
             'name': self.name,
             'items': [item.json() for item in self.items.all()]
         }
 
     @classmethod
-    def find_by_store_id(cls, _id):
-        return cls.query.filter_by(store_id=_id).first()
+    def find_by_id(cls, _id):
+        return cls.query.filter_by(id=_id).first()
 
     def save_to_db(self):
         db.session.add(self)
