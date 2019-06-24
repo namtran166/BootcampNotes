@@ -17,34 +17,34 @@ class Store(Resource):
     @staticmethod
     @check_internal_server
     def get(store_id):
-        store = validate_input(store_id=store_id)
-        if store[1] == 404:
-            return store
-
-        return store.json(), 200
+        result = validate_input(store_id=store_id)
+        if result.__class__ != StoreModel:
+            return result
+        return result.json(), 200
 
     @jwt_required()
     @check_internal_server
     def delete(self, store_id):
-        store = validate_input(store_id=store_id)
-        if store[1] == 404:
-            return store
-        if store.items.first() is not None:
+        result = validate_input(store_id=store_id)
+        if result.__class__ != StoreModel:
+            return result
+        if result.items.first() is not None:
             return {'message': 'This store still contains some items.'}, 400
 
-        store.delete_from_db()
+        result.delete_from_db()
         return {'message': 'Store deleted.'}, 200
 
     @jwt_required()
     @check_internal_server
     def put(self, store_id):
-        store = validate_input(store_id=store_id)
-        if store[1] == 404:
-            return store
+        result = validate_input(store_id=store_id)
+        if result.__class__ != StoreModel:
+            return result
 
         data = Store.parser.parse_args()
-        store.name = data['name']
-        return store.json(), 200
+        result.name = data['name']
+        result.save_to_db()
+        return result.json(), 200
 
 
 class StoreList(Resource):
