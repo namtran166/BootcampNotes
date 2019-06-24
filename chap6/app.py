@@ -1,4 +1,3 @@
-#!/usr/local/bin/python3
 from flask import Flask
 from flask_jwt import JWT
 from flask_restful import Api
@@ -22,14 +21,14 @@ def create_tables():
 
 jwt = JWT(app, authenticate, identity)
 
-api.add_resource(Store, '/stores/<int:store_id>', '/stores')
-api.add_resource(StoreList, '/store_list')
-api.add_resource(Item, '/stores/<int:store_id>/items/<int:item_id>', '/stores/<int:store_id>/items')
-api.add_resource(ItemList, '/stores/<int:store_id>/item_list')
-api.add_resource(UserRegister, '/register')
+api.add_resource(Store, '/stores/<int:store_id>')
+api.add_resource(StoreList, '/stores')
+api.add_resource(Item, '/stores/<int:store_id>/items/<int:item_id>')
+api.add_resource(ItemList, '/stores/<int:store_id>/items')
+api.add_resource(UserRegister, '/users')
 
 if __name__ == '__main__':
     from db import db
 
     db.init_app(app)
-    app.run(debug=True)
+    app.run(port=5000, debug=True)

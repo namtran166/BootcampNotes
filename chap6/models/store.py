@@ -9,19 +9,19 @@ class StoreModel(db.Model):
 
     items = db.relationship('ItemModel', lazy='dynamic')
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, *args, **kwargs):
+        super(StoreModel, self).__init__(*args, **kwargs)
 
     def json(self):
         return {
-            'store_id': self.store_id,
+            'id': self.store_id,
             'name': self.name,
             'items': [item.json() for item in self.items.all()]
         }
 
     @classmethod
-    def find_by_store_id(cls, store_id):
-        return cls.query.filter_by(store_id=store_id).first()
+    def find_by_store_id(cls, _id):
+        return cls.query.filter_by(store_id=_id).first()
 
     def save_to_db(self):
         db.session.add(self)
