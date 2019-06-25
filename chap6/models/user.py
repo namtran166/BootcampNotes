@@ -1,5 +1,3 @@
-from werkzeug.security import generate_password_hash
-
 from db import db
 
 
@@ -7,16 +5,12 @@ class UserModel(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(80), nullable=False)
+    username = db.Column(db.String(80), nullable=False, unique=True)
     hashed_password = db.Column(db.String(), nullable=False)
-    first_name = db.Column(db.String(80), default="No first name provided.")
-    last_name = db.Column(db.String(80), default="No last name provided.")
+    first_name = db.Column(db.String(80))
+    last_name = db.Column(db.String(80))
 
     def __init__(self, *args, **kwargs):
-        self.username = kwargs['username'].strip()
-        self.hashed_password = generate_password_hash(kwargs['password'])
-        print(self.hashed_password)
-        del kwargs['password']
         super(UserModel, self).__init__(*args, **kwargs)
 
     @classmethod
@@ -25,7 +19,7 @@ class UserModel(db.Model):
 
     @classmethod
     def find_by_id(cls, _id):
-        return cls.query.filter_by(id=_id).first()
+        return cls.query.get(_id)
 
     def save_to_db(self):
         db.session.add(self)
