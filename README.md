@@ -1,5 +1,3 @@
-A project created based on the REST APIs with Flask and Python course taught by Jose Salvatierra
-
 # API Docs
 
 ## /register
